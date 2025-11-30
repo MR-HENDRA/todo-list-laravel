@@ -1,0 +1,446 @@
+/* ===== TO-DO LIST - ULTRA MODERN (Notion + Linear Inspired) ===== */
+:root {
+    --notion-blue: #1a68bc;
+    --notion-blue-light: #eaf3ff;
+    --trello-blue: #0079bf;
+    --success: #38a169;
+    --warning: #d69e2e;
+    --danger: #e53e3e;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
+    --gray-400: #94a3b8;
+    --gray-500: #64748b;
+    --gray-700: #334155;
+    --gray-900: #0f172a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    font-family: "Poppins", sans-serif;
+    color: var(--gray-900);
+    min-height: 100vh;
+    padding-bottom: 3rem;
+    -webkit-font-smoothing: antialiased;
+}
+
+.container {
+    max-width: 800px;
+    margin: 2.5rem auto;
+    padding: 0 1.5rem;
+}
+
+/* Header */
+.page-title {
+    font-weight: 700;
+    font-size: 2rem;
+    background: linear-gradient(90deg, var(--gray-900), var(--gray-700));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+}
+
+.date-display {
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--notion-blue);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+.date-display::before {
+    content: "📅";
+    font-size: 1.25rem;
+}
+
+/* Search */
+.search-box {
+    margin-bottom: 1.8rem;
+}
+.search-input {
+    width: 100%;
+    padding: 0.85rem 1.4rem;
+    border: none;
+    border-radius: 16px;
+    font-size: 1rem;
+    font-family: "Poppins", sans-serif;
+    background: white;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+}
+.search-input:focus {
+    outline: none;
+    box-shadow: 0 4px 20px rgba(26, 104, 188, 0.15);
+}
+
+/* ✨ FLOATING ACTION BUTTON */
+.fab-container {
+    position: fixed;
+    bottom: 2.5rem;
+    right: 2.5rem;
+    z-index: 1000;
+}
+.fab {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--trello-blue);
+    color: white;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(0, 121, 191, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+}
+
+.fab:hover {
+    transform: scale(1.12) rotate(90deg);
+    box-shadow: 0 6px 14px rgba(0, 121, 191, 0.45);
+}
+
+/* ✨ SLIDE-DOWN FORM */
+.task-form-slide {
+    background: white;
+    border-radius: 18px;
+    padding: 1.4rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--gray-200);
+    display: none;
+    animation: slideDown 0.4s ease forwards;
+}
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.inline-form {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.inline-form input[type="text"] {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.85rem 1.2rem;
+    border: none;
+    border-radius: 14px;
+    font-family: "Poppins", sans-serif;
+    font-size: 1rem;
+    background: var(--gray-50);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.inline-form input[type="date"] {
+    padding: 0.85rem 1.2rem;
+    border: none;
+    border-radius: 14px;
+    font-family: "Poppins", sans-serif;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    min-width: 160px;
+}
+.btn-add {
+    padding: 0.85rem 1.6rem;
+    background: var(--trello-blue);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+.btn-add:hover {
+    background: #006bb3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 121, 191, 0.3);
+}
+.btn-cancel {
+    background: var(--gray-200);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+.btn-cancel:hover {
+    background: var(--gray-300);
+    transform: rotate(90deg);
+}
+
+/* Task List */
+#taskList {
+    list-style: none;
+    padding: 0;
+}
+
+.task-item {
+    background: white;
+    border-radius: 18px;
+    padding: 1.4rem;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--gray-200);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+}
+.task-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.09);
+}
+.task-item.completed::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 4px;
+    background: var(--gray-300);
+}
+.task-item:not(.completed)::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 4px;
+    background: var(--notion-blue);
+}
+
+.task-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.2rem;
+}
+.task-content > div:first-child {
+    flex: 1;
+}
+.task-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: 0.4rem;
+    line-height: 1.4;
+}
+.task-item.completed .task-title {
+    text-decoration: line-through;
+    color: var(--gray-500);
+}
+
+.task-desc {
+    font-size: 0.95rem;
+    color: var(--gray-600);
+    padding: 0.7rem;
+    background: var(--notion-blue-light);
+    border-radius: 12px;
+    margin-top: 0.5rem;
+    line-height: 1.5;
+}
+
+/* Status Badge */
+.status-badge {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-family: "Poppins", sans-serif;
+}
+.badge-pending {
+    background: #fff8e6;
+    color: var(--warning);
+}
+.badge-completed {
+    background: #e6f7ee;
+    color: var(--success);
+}
+
+/* Action Buttons */
+.actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+}
+/* Action Buttons */
+.task-actions .action-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: none;
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: all 0.25s ease;
+    color: var(--gray-500);
+}
+
+.edit-btn:hover i {
+    color: #f39c12; /* or var(--warning) */
+}
+.complete-btn:hover i {
+    color: var(--success);
+}
+.delete-btn:hover i {
+    color: var(--danger);
+}
+
+.task-item.completed .complete-btn i {
+    color: var(--gray-400);
+}
+.edit-btn {
+    background: #fff5e6;
+    color: var(--warning);
+}
+.edit-btn:hover {
+    background: #ffebcc;
+    transform: scale(1.1);
+}
+.complete-btn {
+    background: #e6f7ee;
+    color: var(--success);
+}
+.complete-btn:hover {
+    background: #c8e6d9;
+    transform: scale(1.1);
+}
+.delete-btn {
+    background: #ffe6e6;
+    color: var(--danger);
+}
+.delete-btn:hover {
+    background: #ffcccc;
+    transform: scale(1.1);
+}
+
+/* Date Nav */
+.date-nav {
+    display: flex;
+    justify-content: center;
+    gap: 0.9rem;
+    margin-top: 2rem;
+}
+.date-nav .btn {
+    padding: 0.6rem 1.4rem;
+    border-radius: 16px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    border: none;
+    background: white;
+    color: var(--gray-700);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.25s ease;
+}
+.date-nav .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.date-nav .btn-outline-primary {
+    background: var(--notion-blue-light);
+    color: var(--notion-blue);
+}
+.date-nav .btn-outline-primary:hover {
+    background: #d4e8ff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem;
+    }
+    .page-title {
+        font-size: 1.6rem;
+    }
+    .fab {
+        width: 50px;
+        height: 50px;
+        font-size: 1.6rem;
+        bottom: 1.8rem;
+        right: 1.8rem;
+    }
+    .inline-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .inline-form input,
+    .btn-add {
+        width: 100%;
+    }
+    .task-content {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .actions {
+        justify-content: flex-start;
+    }
+}
+
+/* Search & Date Input Styling */
+.search-date-container {
+    margin-bottom: 1.8rem;
+}
+
+.search-input,
+.date-input {
+    border: none;
+    border-radius: 16px;
+    padding: 0.85rem 1.2rem;
+    font-family: "Poppins", sans-serif;
+    font-size: 1rem;
+    background: white;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+}
+
+.search-input:focus,
+.date-input:focus {
+    outline: none;
+    box-shadow: 0 4px 20px rgba(26, 104, 188, 0.15);
+}
+
+/* Ikon dalam container */
+.search-date-container i {
+    font-size: 1.1rem;
+}
+
+/* Header Tanggal di Mode "Semua" */
+.task-date-header {
+    list-style: none;
+    background: var(--notion-blue-light);
+    padding: 0.6rem 1.4rem;
+    border-radius: 12px;
+    margin: 1.4rem 0 0.8rem;
+    font-weight: 600;
+    color: var(--notion-blue);
+    font-size: 1.1rem;
+    border-left: 0px solid var(--notion-blue);
+}

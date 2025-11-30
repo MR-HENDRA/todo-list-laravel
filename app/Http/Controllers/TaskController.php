@@ -1,0 +1,97 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Task;
+use Carbon\Carbon;
+
+class TaskController extends Controller
+{
+    public function index(Request $request)
+    {
+        $selectedDate = $request->get('date', now()->toDateString());
+
+        // Validasi & format tanggal di controller
+        $formattedDate = Carbon::parse($selectedDate)
+            ->locale('en')
+            ->isoFormat('dddd, D MMMM YYYY');
+
+        $tasks = Task::whereDate('date', $selectedDate)->get();
+
+        return view('tasks.index', compact('tasks', 'selectedDate', 'formattedDate'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'date'        => 'required|date',
+        ]);
+
+        $task = Task::create([
+            'title'       => $request->title,
+            'description' => $request->description,
+            'date'        => $request->date,
+            'completed'   => false,
+        ]);
+
+        return response()->json($task);
+    }
+
+    public function update(Request $request, Task $task)
+    {
+        $task->update([
+            'completed' => (bool) $request->completed,
+        ]);
+
+        return response()->json($task);
+    }
+
+    public function updateTask(Request $request, Task $task)
+    {
+        $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
+        $task->update([
+            'title'       => $request->title,
+            'description' => $request->description,
+        ]);
+
+        return response()->json($task);
+    }
+
+    public function destroy(Task $task)
+    {
+        $task->delete();
+        return response()->json(['success' => true]);
+    }
+
+    public function getAllTasks()
+    {
+        $tasks = Task::orderBy('date', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return response()->json($tasks);
+    }
+
+    public function getTasksByDate(Request $request)
+    {
+        $date = $request->query('date', now()->toDateString());
+        if (! \Carbon\Carbon::hasFormat($date, 'Y-m-d')) {
+            return response()->json(['tasks' => [], 'formatted_date' => 'Date not valid']);
+        }
+
+        $tasks = Task::whereDate('date', $date)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'tasks' => $tasks,
+            'formatted_date' => \Carbon\Carbon::parse($date)->locale('en')->isoFormat('dddd, D MMMM YYYY')
+        ]);
+    }
+}

@@ -105,12 +105,12 @@
 
         <!-- Navigasi Tanggal -->
         <div class="date-nav mt-4">
-            <a href="?date={{ \Carbon\Carbon::parse($selectedDate)->subDay()->toDateString() }}" class="btn">
-                < </a>
-                    <a href="?date={{ now()->toDateString() }}" class="btn btn-outline-primary">Today</a>
-                    <a href="?date={{ \Carbon\Carbon::parse($selectedDate)->addDay()->toDateString() }}"
-                        class="btn">>
-                    </a>
+            <a href="/{{ \Carbon\Carbon::parse($selectedDate)->subDay()->toDateString() }}" class="btn">
+                <i class="fa-solid fa-chevron-left"></i> </a>
+            <a href="/{{ now()->toDateString() }}" class="btn btn-outline-primary">Today</a>
+            <a href="/{{ \Carbon\Carbon::parse($selectedDate)->addDay()->toDateString() }}" class="btn">
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
         </div>
     </div>
 

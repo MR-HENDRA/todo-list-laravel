@@ -94,4 +94,18 @@ class TaskController extends Controller
             'formatted_date' => \Carbon\Carbon::parse($date)->locale('en')->isoFormat('dddd, D MMMM YYYY')
         ]);
     }
+
+    public function showByDate(string $date)
+    {
+        // Validasi format tanggal
+        if (! preg_match('/^\d{4}-\d{2}-\d{2}$/', $date) || ! Carbon::canBeCreatedFromFormat($date, 'Y-m-d')) {
+            abort(404);
+        }
+
+        $selectedDate = $date;
+        $formattedDate = Carbon::parse($date)->format('l, j F Y');
+        $tasks = Task::whereDate('date', $date)->orderBy('created_at', 'desc')->get();
+
+        return view('tasks.index', compact('tasks', 'selectedDate', 'formattedDate'));
+    }
 }

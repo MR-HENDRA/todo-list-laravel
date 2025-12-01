@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+
     <title>Mahen’s To-Do List</title>
     <!-- Poppins Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -103,12 +105,12 @@
 
         <!-- Navigasi Tanggal -->
         <div class="date-nav mt-4">
-            <a href="?date={{ \Carbon\Carbon::parse($selectedDate)->subDay()->toDateString() }}" class="btn">«
-                Yesterday</a>
-            <a href="?date={{ now()->toDateString() }}" class="btn btn-outline-primary">Today</a>
-            <a href="?date={{ \Carbon\Carbon::parse($selectedDate)->addDay()->toDateString() }}"
-                class="btn">Tomorrow
-                »</a>
+            <a href="?date={{ \Carbon\Carbon::parse($selectedDate)->subDay()->toDateString() }}" class="btn">
+                < </a>
+                    <a href="?date={{ now()->toDateString() }}" class="btn btn-outline-primary">Today</a>
+                    <a href="?date={{ \Carbon\Carbon::parse($selectedDate)->addDay()->toDateString() }}"
+                        class="btn">>
+                    </a>
         </div>
     </div>
 

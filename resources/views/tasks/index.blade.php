@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
 
-    <title>Mahen</title>
+    <title>Mahen Lani’s Space</title>
     <!-- Poppins Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
@@ -21,7 +21,7 @@
 
 <body>
     <div class="container">
-        <h2 class="page-title">Mahen’s To-Do List</h2>
+        <h2 class="page-title">Mahen Lani’s To-Do List</h2>
 
         <!-- Tanggal Aktif -->
         <div class="date-display">

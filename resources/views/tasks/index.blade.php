@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <!-- Custom CSS -->
     <link href="/css/todo.css?v={{ time() }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
@@ -35,7 +34,7 @@
                 <input type="text" id="searchInput" class="search-input" placeholder="Search...">
             </div>
             <div class="controls-right">
-                <input type="text" id="datePicker" class="date-input" value="{{ $selectedDate }}">
+                <input type="date" id="datePicker" class="date-input" value="{{ $selectedDate }}">
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="showAllTasks">
                     <label class="form-check-label" for="showAllTasks">All Tasks</label>
@@ -470,13 +469,6 @@
 
         $('#cancelForm').on('click', function() {
             $('#taskFormContainer').slideUp(300);
-        });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script>
-        flatpickr("#datePicker", {
-            dateFormat: "Y-m-d",
-            allowInput: true
         });
     </script>
 </body>

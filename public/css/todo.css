@@ -1,4 +1,3 @@
-/* ===== TO-DO LIST - ULTRA MODERN (Notion + Linear Inspired) ===== */
 :root {
     --notion-blue: #1a68bc;
     --notion-blue-light: #eaf3ff;
@@ -21,6 +20,7 @@
     padding: 0;
     box-sizing: border-box;
 }
+
 body {
     background: linear-gradient(
         135deg,
@@ -28,10 +28,9 @@ body {
         #f3e5f5 30%,
         #fffde7 60%,
         #f1f8e9 100%
-    );
+    ) !important;
     background-size: 400% 400%;
     animation: gradientShift 20s ease infinite;
-
     font-family: "Poppins", sans-serif;
     color: var(--gray-900);
     min-height: 100vh;
@@ -54,7 +53,7 @@ body {
 .container {
     max-width: 800px;
     margin: 2.5rem auto;
-    padding: 4rem 4rem 7rem 4rem; /* 👈 tambah padding kiri & atas */
+    padding: 4rem 4rem 7rem 4rem;
     background: rgba(255, 255, 255, 0.6);
     border-radius: 20px;
     backdrop-filter: blur(10px);
@@ -62,7 +61,6 @@ body {
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
 }
 
-/* Header */
 .page-title {
     font-weight: 800;
     font-size: 2rem;
@@ -83,40 +81,73 @@ body {
     align-items: center;
     gap: 0.6rem;
 }
+
 .date-display::before {
     content: "📅";
     font-size: 1.25rem;
 }
 
-/* Search */
-.search-box {
+.search-date-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
     margin-bottom: 1.8rem;
+    flex-wrap: wrap;
 }
+
+.search-date-wrapper .search-box {
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-date-wrapper .controls-right {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+
 .search-input,
 .date-input {
+    padding: 0.85rem 1.2rem;
     border: none;
     border-radius: 16px;
-    padding: 0.85rem 1.2rem;
     font-family: "Poppins", sans-serif;
     font-size: 1rem;
     background: white;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06); /* lebih tebal */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     transition: all 0.3s ease;
+}
+
+.search-input {
+    width: 100%;
 }
 
 .search-input:focus,
 .date-input:focus {
     outline: none;
-    box-shadow: 0 6px 24px rgba(26, 104, 188, 0.15); /* lebih dramatis */
+    box-shadow: 0 6px 24px rgba(26, 104, 188, 0.15);
 }
 
-/* ✨ FLOATING ACTION BUTTON */
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0;
+}
+
+.form-check-input {
+    margin: 0;
+}
+
 .fab-container {
     position: fixed;
     bottom: 2.5rem;
     right: 4rem;
     z-index: 1000;
 }
+
 .fab {
     width: 60px;
     height: 60px;
@@ -138,7 +169,6 @@ body {
     box-shadow: 0 6px 14px rgba(0, 121, 191, 0.45);
 }
 
-/* Efek glow saat hover */
 .fab:hover::after {
     content: "";
     position: absolute;
@@ -155,7 +185,6 @@ body {
     z-index: -1;
 }
 
-/* ✨ SLIDE-DOWN FORM */
 .task-form-slide {
     background: white;
     border-radius: 18px;
@@ -166,6 +195,7 @@ body {
     display: none;
     animation: slideDown 0.4s ease forwards;
 }
+
 @keyframes slideDown {
     from {
         opacity: 0;
@@ -183,6 +213,7 @@ body {
     align-items: center;
     flex-wrap: wrap;
 }
+
 .inline-form input[type="text"] {
     flex: 1;
     min-width: 200px;
@@ -194,6 +225,7 @@ body {
     background: var(--gray-50);
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
 }
+
 .inline-form input[type="date"] {
     padding: 0.85rem 1.2rem;
     border: none;
@@ -203,6 +235,7 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     min-width: 160px;
 }
+
 .btn-add {
     padding: 0.85rem 1.6rem;
     background: var(--trello-blue);
@@ -215,11 +248,13 @@ body {
     transition: all 0.25s ease;
     white-space: nowrap;
 }
+
 .btn-add:hover {
     background: #006bb3;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 121, 191, 0.3);
 }
+
 .btn-cancel {
     background: var(--gray-200);
     border: none;
@@ -233,12 +268,12 @@ body {
     justify-content: center;
     transition: all 0.2s ease;
 }
+
 .btn-cancel:hover {
     background: var(--gray-300);
     transform: rotate(90deg);
 }
 
-/* Task List */
 #taskList {
     list-style: none;
     padding: 0;
@@ -255,19 +290,13 @@ body {
     position: relative;
     overflow: hidden;
 }
+
 .task-item:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 22px rgba(0, 0, 0, 0.09);
 }
-.task-item.completed::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 4px;
-    background: var(--gray-300);
-}
+
+.task-item.completed::before,
 .task-item:not(.completed)::before {
     content: "";
     position: absolute;
@@ -275,6 +304,13 @@ body {
     left: 0;
     height: 100%;
     width: 4px;
+}
+
+.task-item.completed::before {
+    background: var(--gray-300);
+}
+
+.task-item:not(.completed)::before {
     background: var(--notion-blue);
 }
 
@@ -284,9 +320,11 @@ body {
     align-items: flex-start;
     gap: 1.2rem;
 }
+
 .task-content > div:first-child {
     flex: 1;
 }
+
 .task-title {
     font-size: 1.15rem;
     font-weight: 600;
@@ -294,6 +332,7 @@ body {
     margin-bottom: 0.4rem;
     line-height: 1.4;
 }
+
 .task-item.completed .task-title {
     text-decoration: line-through;
     color: var(--gray-500);
@@ -309,30 +348,6 @@ body {
     line-height: 1.5;
 }
 
-/* Status Badge */
-.status-badge {
-    font-size: 0.75rem;
-    padding: 0.35rem 0.7rem;
-    border-radius: 20px;
-    font-weight: 600;
-    font-family: "Poppins", sans-serif;
-}
-.badge-pending {
-    background: #fff8e6;
-    color: var(--warning);
-}
-.badge-completed {
-    background: #e6f7ee;
-    color: var(--success);
-}
-
-/* Action Buttons */
-.actions {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 0.8rem;
-}
-/* Action Buttons */
 .task-actions .action-btn {
     width: 36px;
     height: 36px;
@@ -348,51 +363,43 @@ body {
     color: var(--gray-500);
 }
 
-.edit-btn:hover i {
-    color: #f39c12; /* or var(--warning) */
-}
-.complete-btn:hover i {
-    color: var(--success);
-}
-.delete-btn:hover i {
-    color: var(--danger);
-}
-
-.task-item.completed .complete-btn i {
-    color: var(--gray-400);
-}
 .edit-btn {
     background: #fff5e6;
     color: var(--warning);
 }
+
 .edit-btn:hover {
     background: #ffebcc;
     transform: scale(1.1);
 }
+
 .complete-btn {
     background: #e6f7ee;
     color: var(--success);
 }
+
 .complete-btn:hover {
     background: #c8e6d9;
     transform: scale(1.1);
 }
+
 .delete-btn {
     background: #ffe6e6;
     color: var(--danger);
 }
+
 .delete-btn:hover {
     background: #ffcccc;
     transform: scale(1.1);
 }
 
-/* Date Nav */
 .date-nav {
     display: flex;
     justify-content: center;
     gap: 0.9rem;
     margin-top: 2rem;
 }
+
 .date-nav .btn {
     padding: 0.6rem 1.4rem;
     border-radius: 16px;
@@ -401,83 +408,24 @@ body {
     border: none;
     background: white;
     color: var(--gray-700);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); /* tambah bayangan */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
     transition: all 0.25s ease;
 }
 
 .date-nav .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1); /* lebih dalam */
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
+
 .date-nav .btn-outline-primary {
     background: var(--notion-blue-light);
     color: var(--notion-blue);
 }
+
 .date-nav .btn-outline-primary:hover {
     background: #d4e8ff;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .container {
-        padding: 0 1rem;
-    }
-    .page-title {
-        font-size: 1.6rem;
-    }
-    .fab {
-        width: 50px;
-        height: 50px;
-        font-size: 1.6rem;
-        bottom: 1.8rem;
-        right: 1.8rem;
-    }
-    .inline-form {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .inline-form input,
-    .btn-add {
-        width: 100%;
-    }
-    .task-content {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    .actions {
-        justify-content: flex-start;
-    }
-}
-
-/* Search & Date Input Styling */
-.search-date-container {
-    margin-bottom: 1.8rem;
-}
-
-.search-input,
-.date-input {
-    border: none;
-    border-radius: 16px;
-    padding: 0.85rem 1.2rem;
-    font-family: "Poppins", sans-serif;
-    font-size: 1rem;
-    background: white;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-    transition: all 0.3s ease;
-}
-
-.search-input:focus,
-.date-input:focus {
-    outline: none;
-    box-shadow: 0 4px 20px rgba(26, 104, 188, 0.15);
-}
-
-/* Ikon dalam container */
-.search-date-container i {
-    font-size: 1.1rem;
-}
-
-/* Header Tanggal di Mode "Semua" */
 .task-date-header {
     list-style: none;
     background: var(--notion-blue-light);
@@ -487,5 +435,87 @@ body {
     font-weight: 600;
     color: var(--notion-blue);
     font-size: 1.1rem;
-    border-left: 0px solid var(--notion-blue);
+}
+
+/* WhatsApp-style timestamp */
+.task-time.whatsapp-style {
+    font-size: 0.75rem;
+    color: #667781;
+    background: #f0f2f5;
+    padding: 3px 8px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.task-time.whatsapp-style i {
+    font-size: 0.7rem;
+    margin-right: 3px;
+}
+
+.task-item.completed .task-time.whatsapp-style {
+    opacity: 0.6;
+    text-decoration: line-through;
+    background: #e8eaed;
+    color: #8e8e8e;
+}
+
+/* Hover effect */
+.task-item:hover .task-time.whatsapp-style {
+    background: #e0e5eb;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 2rem 1.5rem 6rem 1.5rem;
+    }
+
+    .page-title {
+        font-size: 1.6rem;
+    }
+
+    .fab {
+        width: 50px;
+        height: 50px;
+        font-size: 1.6rem;
+        bottom: 1.8rem;
+        right: 1.8rem;
+    }
+
+    .search-date-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .search-date-wrapper .controls-right {
+        justify-content: flex-start;
+        width: 100%;
+        gap: 0.8rem;
+    }
+
+    .date-input {
+        min-width: 100%;
+        width: auto;
+    }
+
+    .inline-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .inline-form input,
+    .btn-add {
+        width: 100%;
+    }
+
+    .task-content {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .task-actions {
+        justify-content: flex-start;
+    }
 }

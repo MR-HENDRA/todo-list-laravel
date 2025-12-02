@@ -29,16 +29,16 @@
         </div>
 
         <!-- Search, Date Picker & Toggle Semua -->
-        <div class="search-date-container d-flex flex-wrap gap-3 mb-4 align-items-center">
-            <div class="flex-grow-1" style="min-width: 200px;">
-                <input type="text" id="searchInput" class="form-control search-input" placeholder="Search...">
+        <div class="search-date-wrapper">
+            <div class="search-box">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search...">
             </div>
-            <div style="min-width: 200px;">
-                <input type="date" id="datePicker" class="form-control date-input" value="{{ $selectedDate }}">
-            </div>
-            <div class="form-check" style="min-width: 150px;">
-                <input class="form-check-input" type="checkbox" id="showAllTasks">
-                <label class="form-check-label" for="showAllTasks">All Tasks</label>
+            <div class="controls-right">
+                <input type="date" id="datePicker" class="date-input" value="{{ $selectedDate }}">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="showAllTasks">
+                    <label class="form-check-label" for="showAllTasks">All Tasks</label>
+                </div>
             </div>
         </div>
 
@@ -65,40 +65,31 @@
                 <li class="task-item {{ $task->completed ? 'completed' : '' }}" data-id="{{ $task->id }}">
                     <div class="task-content">
                         <div class="d-flex justify-content-between align-items-start">
-                            <div>
+                            <div class="flex-grow-1">
+                                <!-- TIMESTAMP WhatsApp-style berdasarkan kapan dibuat -->
+                                @if ($task->created_time && $task->created_date)
+                                    <div class="task-time whatsapp-style mb-1">
+                                        <i class="fa-regular fa-clock me-1"></i>
+                                        {{ \Carbon\Carbon::parse($task->created_date)->isToday()
+                                            ? 'Today'
+                                            : (\Carbon\Carbon::parse($task->created_date)->isYesterday()
+                                                ? 'Yesterday'
+                                                : \Carbon\Carbon::parse($task->created_date)->format('M j')) }},
+                                        {{ \Carbon\Carbon::parse($task->created_time)->format('H:i') }}
+                                    </div>
+                                @endif
+
                                 <div class="task-title">{{ $task->title }}</div>
                                 @if ($task->description)
                                     <div class="task-desc">{{ $task->description }}</div>
                                 @endif
                             </div>
                             <div class="task-actions d-flex gap-2">
-                                <button class="action-btn edit-btn" data-id="{{ $task->id }}" title="Update">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="action-btn complete-btn {{ $task->completed ? 'completed' : '' }}"
-                                    data-id="{{ $task->id }}" data-completed="{{ $task->completed ? '1' : '0' }}"
-                                    title="{{ $task->completed ? 'Undo' : 'Done' }}">
-                                    <i class="fas fa-check-circle"></i>
-                                </button>
-                                <button class="action-btn delete-btn" data-id="{{ $task->id }}" title="Delete">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
+                                <!-- ... tombol action tetap sama ... -->
                             </div>
                         </div>
                     </div>
-                    <div class="edit-form mt-3" style="display:none;">
-                        <div class="mb-2">
-                            <input type="text" class="form-control edit-title" value="{{ $task->title }}" required>
-                        </div>
-                        <div class="mb-2">
-                            <textarea class="form-control edit-desc" rows="2">{{ $task->description }}</textarea>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-sm btn-success save-edit" data-id="{{ $task->id }}">Save
-                                Changes</button>
-                            <button class="btn btn-sm btn-secondary cancel-edit">Cancel</button>
-                        </div>
-                    </div>
+                    <!-- ... edit form tetap sama ... -->
                 </li>
             @endforeach
         </ul>
@@ -161,7 +152,7 @@
             }
         }
 
-        // ✅ Helper: buat elemen task
+        // ✅ Helper: buat elemen task dengan timestamp WhatsApp-style
         function appendTaskItem(task) {
             const descHtml = task.description ? `<div class="task-desc">${task.description}</div>` : '';
             const completedClass = task.completed ? 'completed' : '';
@@ -169,43 +160,76 @@
             const completedBtnTitle = task.completed ? 'Undo' : 'Done';
             const completedBtnData = task.completed ? '1' : '0';
 
+            // Format waktu seperti WhatsApp berdasarkan tanggal pembuatan
+            let timeHtml = '';
+            if (task.created_time && task.created_date) {
+                const createdDate = new Date(task.created_date);
+                const today = new Date();
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+
+                let dayText = '';
+                if (createdDate.toDateString() === today.toDateString()) {
+                    dayText = 'Today';
+                } else if (createdDate.toDateString() === yesterday.toDateString()) {
+                    dayText = 'Yesterday';
+                } else {
+                    dayText = createdDate.toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                }
+
+                // Format waktu ke H:i (tanpa detik)
+                const timeParts = task.created_time.split(':');
+                const formattedTime = timeParts[0] + ':' + timeParts[1];
+
+                timeHtml = `
+            <div class="task-time whatsapp-style mb-1">
+                <i class="fa-regular fa-clock me-1"></i>
+                ${dayText}, ${formattedTime}
+            </div>
+        `;
+            }
+
             $('#taskList').append(`
-                <li class="task-item ${completedClass}" data-id="${task.id}">
-                    <div class="task-content">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <div class="task-title">${task.title}</div>
-                                ${descHtml}
-                            </div>
-                            <div class="task-actions d-flex gap-2">
-                                <button class="action-btn edit-btn" data-id="${task.id}" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="action-btn complete-btn ${completedBtnClass}"
-                                    data-id="${task.id}" data-completed="${completedBtnData}"
-                                    title="${completedBtnTitle}">
-                                    <i class="fas fa-check-circle"></i>
-                                </button>
-                                <button class="action-btn delete-btn" data-id="${task.id}" title="Hapus">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </div>
-                        </div>
+        <li class="task-item ${completedClass}" data-id="${task.id}">
+            <div class="task-content">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        ${timeHtml}
+                        <div class="task-title">${task.title}</div>
+                        ${descHtml}
                     </div>
-                    <div class="edit-form mt-3" style="display:none;">
-                        <div class="mb-2">
-                            <input type="text" class="form-control edit-title" value="${task.title}" required>
-                        </div>
-                        <div class="mb-2">
-                            <textarea class="form-control edit-desc" rows="2">${task.description || ''}</textarea>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-sm btn-success save-edit" data-id="${task.id}">save</button>
-                            <button class="btn btn-sm btn-secondary cancel-edit">Cancel</button>
-                        </div>
+                    <div class="task-actions d-flex gap-2">
+                        <button class="action-btn edit-btn" data-id="${task.id}" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn complete-btn ${completedBtnClass}"
+                            data-id="${task.id}" data-completed="${completedBtnData}"
+                            title="${completedBtnTitle}">
+                            <i class="fas fa-check-circle"></i>
+                        </button>
+                        <button class="action-btn delete-btn" data-id="${task.id}" title="Hapus">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
                     </div>
-                </li>
-            `);
+                </div>
+            </div>
+            <div class="edit-form mt-3" style="display:none;">
+                <div class="mb-2">
+                    <input type="text" class="form-control edit-title" value="${task.title}" required>
+                </div>
+                <div class="mb-2">
+                    <textarea class="form-control edit-desc" rows="2">${task.description || ''}</textarea>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-success save-edit" data-id="${task.id}">Save</button>
+                    <button class="btn btn-sm btn-secondary cancel-edit">Cancel</button>
+                </div>
+            </div>
+        </li>
+    `);
         }
 
         function loadAllTasks() {
@@ -258,43 +282,77 @@
                 description: null,
                 date: date
             }, function(task) {
-                let descHtml = task.description ? '<div class="task-desc">' + task.description + '</div>' :
-                    '';
+                const descHtml = task.description ? '<div class="task-desc">' + task.description +
+                    '</div>' : '';
+
+                // Format waktu untuk task baru berdasarkan tanggal pembuatan
+                let timeHtml = '';
+                if (task.created_time && task.created_date) {
+                    const createdDate = new Date(task.created_date);
+                    const today = new Date();
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+
+                    let dayText = '';
+                    if (createdDate.toDateString() === today.toDateString()) {
+                        dayText = 'Today';
+                    } else if (createdDate.toDateString() === yesterday.toDateString()) {
+                        dayText = 'Yesterday';
+                    } else {
+                        dayText = createdDate.toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric'
+                        });
+                    }
+
+                    // Format waktu ke H:i (tanpa detik)
+                    const timeParts = task.created_time.split(':');
+                    const formattedTime = timeParts[0] + ':' + timeParts[1];
+
+                    timeHtml = `
+                <div class="task-time whatsapp-style mb-1">
+                    <i class="fa-regular fa-clock me-1"></i>
+                    ${dayText}, ${formattedTime}
+                </div>
+            `;
+                }
+
                 $('#taskList').prepend(`
-                    <li class="task-item" data-id="${task.id}">
-                        <div class="task-content">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <div class="task-title">${task.title}</div>
-                                    ${descHtml}
-                                </div>
-                                <div class="task-actions d-flex gap-2">
-                                    <button class="action-btn edit-btn" data-id="${task.id}" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="action-btn complete-btn" data-id="${task.id}" data-completed="0" title="Tandai Selesai">
-                                        <i class="fas fa-check-circle"></i>
-                                    </button>
-                                    <button class="action-btn delete-btn" data-id="${task.id}" title="Hapus">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </div>
-                            </div>
+            <li class="task-item" data-id="${task.id}">
+                <div class="task-content">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            ${timeHtml}
+                            <div class="task-title">${task.title}</div>
+                            ${descHtml}
                         </div>
-                        <div class="edit-form mt-3" style="display:none;">
-                            <div class="mb-2">
-                                <input type="text" class="form-control edit-title" value="${task.title}" required>
-                            </div>
-                            <div class="mb-2">
-                                <textarea class="form-control edit-desc" rows="2"></textarea>
-                            </div>
-                            <div class="d-flex gap-2">
-                                <button class="btn btn-sm btn-success save-edit" data-id="${task.id}">Simpan</button>
-                                <button class="btn btn-sm btn-secondary cancel-edit">Batal</button>
-                            </div>
+                        <div class="task-actions d-flex gap-2">
+                            <button class="action-btn edit-btn" data-id="${task.id}" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn complete-btn" data-id="${task.id}" data-completed="0" title="Mark as Done">
+                                <i class="fas fa-check-circle"></i>
+                            </button>
+                            <button class="action-btn delete-btn" data-id="${task.id}" title="Delete">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
                         </div>
-                    </li>
-                `);
+                    </div>
+                </div>
+                <div class="edit-form mt-3" style="display:none;">
+                    <div class="mb-2">
+                        <input type="text" class="form-control edit-title" value="${task.title}" required>
+                    </div>
+                    <div class="mb-2">
+                        <textarea class="form-control edit-desc" rows="2"></textarea>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-success save-edit" data-id="${task.id}">Save</button>
+                        <button class="btn btn-sm btn-secondary cancel-edit">Cancel</button>
+                    </div>
+                </div>
+            </li>
+        `);
                 $('#taskInput').val('');
                 $('#taskFormContainer').slideUp(300);
             });

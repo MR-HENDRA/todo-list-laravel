@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
 {
@@ -17,7 +18,7 @@ class TaskController extends Controller
             ->locale('en')
             ->isoFormat('dddd, D MMMM YYYY');
 
-        $tasks = Task::whereDate('date', $selectedDate)->get();
+        $tasks = Task::whereDate('date', $selectedDate)->orderBy('created_at', 'desc')->get();
 
         return view('tasks.index', compact('tasks', 'selectedDate', 'formattedDate'));
     }
@@ -30,14 +31,19 @@ class TaskController extends Controller
             'date'        => 'required|date',
         ]);
 
-        $task = Task::create([
-            'title'       => $request->title,
-            'description' => $request->description,
-            'date'        => $request->date,
-            'completed'   => false,
-        ]);
+        try {
+            $task = Task::create([
+                'title'       => $request->title,
+                'description' => $request->description,
+                'date'        => $request->date,
+                'completed'   => false,
+            ]);
 
-        return response()->json($task);
+            return response()->json($task);
+        } catch (\Exception $e) {
+            \Log::error('Gagal menyimpan task: ' . $e->getMessage());
+            return response()->json(['error' => 'Gagal menyimpan task'], 500);
+        }
     }
 
     public function update(Request $request, Task $task)

@@ -66,7 +66,6 @@
                     <div class="task-content">
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="flex-grow-1">
-                                <!-- TIMESTAMP WhatsApp-style berdasarkan kapan dibuat -->
                                 @if ($task->created_time && $task->created_date)
                                     <div class="task-time whatsapp-style mb-1">
                                         <i class="fa-regular fa-clock me-1"></i>
@@ -78,18 +77,39 @@
                                         {{ \Carbon\Carbon::parse($task->created_time)->format('H:i') }}
                                     </div>
                                 @endif
-
                                 <div class="task-title">{{ $task->title }}</div>
                                 @if ($task->description)
                                     <div class="task-desc">{{ $task->description }}</div>
                                 @endif
                             </div>
                             <div class="task-actions d-flex gap-2">
-                                <!-- ... tombol action tetap sama ... -->
+                                <button class="action-btn edit-btn" data-id="{{ $task->id }}" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn complete-btn {{ $task->completed ? 'completed' : '' }}"
+                                    data-id="{{ $task->id }}" data-completed="{{ $task->completed ? 1 : 0 }}"
+                                    title="{{ $task->completed ? 'Undo' : 'Done' }}">
+                                    <i class="fas fa-check-circle"></i>
+                                </button>
+                                <button class="action-btn delete-btn" data-id="{{ $task->id }}" title="Delete">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
-                    <!-- ... edit form tetap sama ... -->
+                    <div class="edit-form mt-3" style="display:none;">
+                        <div class="mb-2">
+                            <input type="text" class="form-control edit-title" value="{{ $task->title }}" required>
+                        </div>
+                        <div class="mb-2">
+                            <textarea class="form-control edit-desc" rows="2">{{ $task->description }}</textarea>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-success save-edit"
+                                data-id="{{ $task->id }}">Save</button>
+                            <button class="btn btn-sm btn-secondary cancel-edit">Cancel</button>
+                        </div>
+                    </div>
                 </li>
             @endforeach
         </ul>
